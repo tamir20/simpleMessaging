@@ -1,7 +1,8 @@
-import socket
-import threading
 import json
 import time
+import socket
+import threading
+from enum.enum_server_commands import *
 
 # Global variable that mantain client's connections
 online_users = {}
@@ -27,7 +28,7 @@ def handle_user_connection(connection: socket.socket, address: str) -> None:
                 #msg_to_send = f'From {address[0]}:{address[1]} - {msg.decode()}'
                 #broadcast(msg_to_send, connection)
 
-                if msg.decode() == "list":
+                if msg.decode() == server_commands.LIST:
                     title = f"{'Name':10} {'ID'}"
                     connection.send(title.encode())
                     divider = f"----------------\n"
