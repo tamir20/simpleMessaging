@@ -50,7 +50,7 @@ def handle_messages(connection: socket.socket):
 def get_port_not_in_use() -> int:
     for port in range(12000,13001):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            if not s.connect_ex(('127.0.0.1', port)):
+            if s.connect_ex(('127.0.0.1', port)):
                 return port
 
 def server(port: int) -> None:
