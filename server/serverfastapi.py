@@ -1,12 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
-import yaml
 from functions.heartbeat import *
+from config.config import config_file
 from classes.heartbeat_message import *
 from fastapi_utils.tasks import repeat_every
 from classes.heartbeat_message import Heartbeat_Message
 from starlette.status import HTTP_200_OK, HTTP_204_NO_CONTENT
-from config.config import config_file
 
 # Global variable that mantain client's connections
 online_users = set[Connection]() 
