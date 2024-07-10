@@ -1,20 +1,20 @@
-import socket
-import requests
-import uvicorn
-from fastapi import FastAPI
 import re
-from classes.heartbeat_message import Heartbeat_Message
+import socket
+import uvicorn
+import requests
+from fastapi import FastAPI
+from functions.chat import send_message
 from functions.json_parser import convert_json_to_user_set
 
-def get_user_list() -> int:
+def print_user_list() -> None:
     response = requests.get('http://127.0.0.1:12000/list')
     user_set = convert_json_to_user_set(response.text)
 
     print(f"{'Name':10} {'ID'}")
-    print(f"----------------\n")
+    print(f"----------------")
 
     for user in user_set:
-        print(f"{user.name:10} {user.port}\n")
+        print(f"{user.name:10} {user.port}")
 
 def get_port_not_in_use() -> int:
     for port in range(12000,13001):
@@ -25,14 +25,26 @@ def get_port_not_in_use() -> int:
 def handle_client_app(app: FastAPI, port: int) -> None:
    uvicorn.run(app, host="127.0.0.1", port=port, log_level="critical", access_log=False, log_config=None)  # Specify the desired port here
 
-def handle_input(msg: str, name: str, port: int) -> None:
+def handle_id(msg: str) -> int:
+    return int(msg.split()[1])
+
+def handle_input(msg: str, name: str, port: int, id: int) -> int:
     pattern = re.compile(r"^id \d+$")
+    updated_id = 0
 
     if msg == 'list':
-        get_user_list()
+        print_user_list()
     elif msg == 'name':
         print(name)
-    elif not pattern.match(msg):
+    elif msg == 'help':
         print('please state your destination id using "id <id>". to see available ids please use "list". see your name using "name"')
-    # else:
-    #     handle_message()
+    elif pattern.match(msg):
+        updated_id = handle_id(msg)
+        print(f'current id is set to {updated_id}')
+    elif id:
+        send_message(name, id, msg)
+    else:
+        print('please state your destination id using "id <id>". to see available ids please use "list". see your name using "name"')
+
+    return updated_id
+    
