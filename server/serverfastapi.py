@@ -6,6 +6,7 @@ from classes.heartbeat_message import *
 from fastapi_utils.tasks import repeat_every
 from classes.heartbeat_message import Heartbeat_Message
 from starlette.status import HTTP_200_OK, HTTP_204_NO_CONTENT
+from enums.server_api_enum import Server_API_Enum
 
 # Global variable that mantain client's connections
 online_users = set[Connection]() 
@@ -13,12 +14,12 @@ app = FastAPI()
 
 
 # heartbeat api
-@app.post(config_file["server"]["api"]["heartbeat"], status_code = HTTP_204_NO_CONTENT)
+@app.post(config_file["server"]["api"][Server_API_Enum.HEARTBEAT], status_code = HTTP_204_NO_CONTENT)
 async def heartbeat(heartbeat: Heartbeat_Message) -> None:
     handle_heartbeat(online_users, heartbeat)
 
 # list online users api
-@app.get(config_file["server"]["api"]["list"], status_code = HTTP_200_OK)
+@app.get(config_file["server"]["api"][Server_API_Enum.LIST], status_code = HTTP_200_OK)
 async def list_online_users() -> set[Heartbeat_Message]:
     return handle_list_online_users(online_users)
 

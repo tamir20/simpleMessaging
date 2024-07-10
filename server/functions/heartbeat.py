@@ -2,10 +2,18 @@ from operator import truediv
 from classes.heartbeat_message import *
 from classes.connection import *
 import datetime
+from logs.logging import log_to_event_viewer_decorator
 
+@log_to_event_viewer_decorator
 def handle_heartbeat(online_users: set[Connection] ,heartbeat: Heartbeat_Message) -> None:
    connection = Connection(heartbeat=heartbeat)
-   online_users.add(connection)
+   if connection not in online_users:
+      online_users.add(connection)
+   else:
+      for user in online_users:
+         if user == connection:
+            user.update_time()
+   
 
 def handle_validate_online_users(online_users: set[Connection]) -> None:
    for connection in online_users:
