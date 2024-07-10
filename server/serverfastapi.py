@@ -1,5 +1,6 @@
+from ast import Dict
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response, Security
 from functions.heartbeat import *
 from config.config import config_file
 from classes.heartbeat_message import *
@@ -15,12 +16,13 @@ app = FastAPI()
 
 # heartbeat api
 @app.post(config_file["server"]["api"][Server_API_Enum.HEARTBEAT], status_code = HTTP_204_NO_CONTENT)
-async def heartbeat(heartbeat: Heartbeat_Message) -> None:
+async def heartbeat(heartbeat: Heartbeat_Message, respose:Response) -> None:
     handle_heartbeat(online_users, heartbeat)
 
 # list online users api
 @app.get(config_file["server"]["api"][Server_API_Enum.LIST], status_code = HTTP_200_OK)
-async def list_online_users() -> set[Heartbeat_Message]:
+async def list_online_users(response:Response) -> set[Heartbeat_Message]:
+    response.set_cookie("mytest", "hi")
     return handle_list_online_users(online_users)
 
 # delete old online records every 3 seconds
