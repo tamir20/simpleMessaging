@@ -22,6 +22,7 @@ def handle_validate_online_users(online_users: set[Connection]) -> None:
 
 def handle_list_online_users(online_users: set[Connection]) -> set[Heartbeat_Message]:
    heartbeat_set = set()
+   # return set([message(name=connection.heartbeat.name, port=connection.heartbeat.port) for message in online_users]) another 1 liner option
    for connection in online_users:
       heartbeat_set.add(Heartbeat_Message(name=connection.heartbeat.name, port=connection.heartbeat.port))
    return heartbeat_set

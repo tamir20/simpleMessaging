@@ -14,7 +14,6 @@ def start_chat_api(app: FastAPI, port: int) -> None:
     threading.Thread(target=handle_client_app, args=[app, port]).start()
 
 def start_chat_terminal(name: str) -> None:
-    current_id = 0 # mark empty id with 0
     while True:
         msg = input()
         id = handle_input(msg, name, current_id)
@@ -39,9 +38,9 @@ def handle_id(msg: str) -> int:
     # i assume that the message has passed the regex inspection of 'id <number>'
     return int(msg.split()[1])
 
-def handle_input(msg: str, name: str, id: int) -> int:
+def handle_input(msg: str, name: str, id: int) -> int | None:
     pattern = re.compile(config_file["messages"]["id_message_regex_format"])
-    updated_id = 0 # updated_id logic means that it will change target
+    updated_id = None # updated_id logic means that it will change target
     # id if the answer from this function is not 0
 
     if msg == Chat_Commands_Enum.LIST:
