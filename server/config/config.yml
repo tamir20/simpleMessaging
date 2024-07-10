@@ -1,0 +1,6 @@
+server:
+  port: 12000
+  ip: "127.0.0.1"
+  api:
+    heartbeat: "/heartbeat"
+    list: "/list"

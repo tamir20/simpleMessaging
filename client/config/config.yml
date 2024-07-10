@@ -1,0 +1,8 @@
+client:
+  ip: "127.0.0.1"
+  api:
+    chat: "/chat"
+  minimum_port: 12000
+  maximum_port: 13000
+messages:
+  id_message_regex_format: "^id \\d+$"
